@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<script src="jquery-3.3.1.js"></script>
+		<script>
+			$(document).ready(function(){
+				$(".button").click(function(){
+					if($(this)[0].innerText=="File")
+					{
+						$("#topHead").append('<div id="fileDiv"></div>');
+					}
+				});
+			});
+			
+		</script>
+		<title>Shotophop</title>
+		<style>
+			*
+			{
+				position: relative;
+			}
+			body
+			{
+				background-color: #282828;
+				margin: 0px;
+				padding: 0px;
+			}
+			#header
+			{
+				width: 100%;
+			}
+			.headDiv
+			{
+				position: relative;
+				background-color: #535353;
+				width: 100%;
+			}
+			#topHead
+			{
+				height: 32px;
+			}
+			#bottomHead
+			{
+				height: 34px;
+				top: 1px;
+			}
+			td
+			{
+				width: 10px;
+				color: white;
+			}
+			td:hover
+			{
+				background-color: #282828;
+			}
+			.button
+			{
+				cursor: pointer;
+				overflow: hidden;
+			}
+			#fileDiv
+			{
+				background-color: #F0F0F0;
+				z-index: 2;
+				position: relative;
+				left: 30px;
+				width: 256px;
+				height: 580px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header">
+			<div class="headDiv" id="topHead">
+				<table style="top: 3px;" width="500px">
+					<tr>
+						<td>img</td>
+						<td class="button">File
+						</td>
+						<td class="button">Edit</td>
+						<td class="button">Image</td>
+						<td class="button">Layer</td>
+						<td class="button">Type</td>
+						<td class="button">Select</td>
+						<td class="button">Filter</td>
+						<td class="button">3D</td>
+						<td class="button">View</td>
+						<td class="button">Window</td>
+						<td class="button">Help</td>
+					</tr>
+				</table>
+			</div>
+			<div class="headDiv" id="bottomHead"></div>
+		</div>
+	</body>
+</html>
