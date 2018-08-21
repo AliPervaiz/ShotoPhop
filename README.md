@@ -1,2 +1,2 @@
 # ShotoPhop
-it's lit
+it's lit.
