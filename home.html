@@ -2,16 +2,72 @@
 	<head>
 		<script src="jquery-3.3.1.js"></script>
 		<script>
+			var clicked = "";
 			$(document).ready(function(){
 				$(".button").click(function(){
-					if($(this)[0].innerText=="File")
+					if(clicked!=$(this)[0].innerText)
 					{
-						$("#topHead").append('<div id="fileDiv"></div>');
+						clicked=$(this)[0].innerText;
+						if($(this)[0].innerText=="File")
+						{
+							$("#topHead").append('<div id="fileDiv"></div>');
+						}
 					}
 				});
-			});
-			
+			});	
 		</script>
+		<script>
+			$(document).ready(function(){
+				//Canvas
+				var canvas = document.getElementById('canvas');
+				var ctx = canvas.getContext('2d');
+				ctx.fillStyle = "white";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				//Variables
+				var canvasx = $(canvas).offset().left;
+				var canvasy = $(canvas).offset().top;
+				var last_mousex = last_mousey = 0;
+				var mousex = mousey = 0;
+				var mousedown = false;
+				var tooltype = 'draw';
+
+				//Mousedown
+				$(canvas).on('mousedown', function(e) {
+				    last_mousex = mousex = parseInt(e.clientX-canvasx);
+					last_mousey = mousey = parseInt(e.clientY-canvasy);
+				    mousedown = true;
+				});
+
+				//Mouseup
+				$(canvas).on('mouseup', function(e) {
+				    mousedown = false;
+				});
+
+				//Mousemove
+				$(canvas).on('mousemove', function(e) {
+				    mousex = parseInt(e.clientX-canvasx);
+				    mousey = parseInt(e.clientY-canvasy);
+				    if(mousedown) {
+				        ctx.beginPath();
+				        if(tooltype=='draw') {
+				            ctx.globalCompositeOperation = 'source-over';
+				            ctx.strokeStyle = 'black';
+				            ctx.lineWidth = 3;
+				        } else {
+				            ctx.globalCompositeOperation = 'destination-out';
+				            ctx.lineWidth = 10;
+				        }
+				        ctx.moveTo(last_mousex,last_mousey);
+				        ctx.lineTo(mousex,mousey);
+				        ctx.lineJoin = ctx.lineCap = 'round';
+				        ctx.stroke();
+				    }
+				    last_mousex = mousex;
+				    last_mousey = mousey;
+				});
+
+			});
+		</script>	
 		<title>Shotophop</title>
 		<style>
 			*
@@ -66,6 +122,16 @@
 				width: 256px;
 				height: 580px;
 			}
+			#content
+			{
+				cursor: crosshair;
+				position: absolute;
+			    top: 50%;
+			    left: 50%;
+			    margin-top: -180px; /* Half the height */
+			    margin-left: -252px; /* Half the width */
+			    transition: transform 2s;
+			}
 		</style>
 	</head>
 	<body>
@@ -90,6 +156,9 @@
 				</table>
 			</div>
 			<div class="headDiv" id="bottomHead"></div>
+		</div>
+		<div id="Content">
+			<canvas id="canvas" width="504" height="360"></canvas>
 		</div>
 	</body>
 </html>
