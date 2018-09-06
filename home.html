@@ -2,9 +2,14 @@
 	<head>
 		<script src="jquery-3.3.1.js"></script>
 		<script>
+			function clear()
+			{
+				$("#topHead div").remove();
+			}
 			var clicked = "";
 			$(document).ready(function(){
 				$(".button").click(function(){
+					clear();
 					if(clicked!=$(this)[0].innerText)
 					{
 						clicked=$(this)[0].innerText;
@@ -12,6 +17,10 @@
 						{
 							$("#topHead").append('<div id="fileDiv"></div>');
 						}
+					}
+					else
+					{
+						clicked = "";
 					}
 				});
 			});	
@@ -73,6 +82,7 @@
 			*
 			{
 				position: relative;
+				user-select: none;
 			}
 			body
 			{
