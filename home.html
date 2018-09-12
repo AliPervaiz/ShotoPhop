@@ -19,8 +19,7 @@
 						}
 						if($(this)[0].innerText=="Color")
 						{
-							console.log("welp");
-							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div><label>R</label> <input type="text" id="rVal" /></div><div><label>G</label> <input type="text" id="gVal" /></div><div><label>B</label> <input type="text" id="bVal" /></div><div><label>RGB</label> <input type="text" id="rgbVal" /></div><div><label>HEX</label> <input type="text" id="hexVal" /></div></div></div>');
+							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div><label>R</label> <input type="text" id="rVal" /></div><div><label>G</label> <input type="text" id="gVal" /></div><div><label>B</label> <input type="text" id="bVal" /></div><div><label>HEX</label> <input type="text" id="hexVal" /></div><button type="button">Ok</button></div></div>');
 							executeColorPicker();
 						}
 					}
@@ -32,16 +31,41 @@
 			});	
 		</script>
 		<script>
+			var brushColor = "#000000";
+			function componentToHex(c) {
+			    var hex = c.toString(16);
+			    return hex.length == 1 ? "0" + hex : hex;
+			}
+			function rgbToHex(r, g, b) {
+			    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+			}
+			function hexToRgb(hex) {
+			    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			    return result ? {
+			        r: parseInt(result[1], 16),
+			        g: parseInt(result[2], 16),
+			        b: parseInt(result[3], 16)
+			    } : null;
+			}
 			function executeColorPicker(){
-			    var bCanPreview = true; // can preview
-			    $("#rVal").val("0");
-			    $("#gVal").val("0");
-			    $("#bVal").val("0");
+			    $("#picker").css("background-color",brushColor);
+			    $("#rVal").val(hexToRgb(brushColor).r);
+			    $("#gVal").val(hexToRgb(brushColor).g);
+			    $("#bVal").val(hexToRgb(brushColor).b);
+			    $("#hexVal").val(brushColor);
 			    $("input").change(function(){
 				    var red = parseInt($("#rVal").val());
 				    var green = parseInt($("#gVal").val());
 				    var blue = parseInt($("#bVal").val());
+				    $("#hexVal").val(rgbToHex(red,green,blue));
 				    $("#picker").css("background-color","rgb("+red+", "+green+", "+blue+")");
+				});
+				$("button").click(function(){
+					var red = parseInt($("#rVal").val());
+				    var green = parseInt($("#gVal").val());
+				    var blue = parseInt($("#bVal").val());
+					brushColor = rgbToHex(red,green,blue);
+					$("#colorPicker").remove();
 				});
 			};
 		</script>
@@ -80,7 +104,7 @@
 				        ctx.beginPath();
 				        if(tooltype=='draw') {
 				            ctx.globalCompositeOperation = 'source-over';
-				            ctx.strokeStyle = 'black';
+				            ctx.strokeStyle = brushColor;
 				            ctx.lineWidth = 3;
 				        } else {
 				            ctx.globalCompositeOperation = 'destination-out';
