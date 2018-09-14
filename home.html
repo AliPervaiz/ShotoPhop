@@ -24,7 +24,7 @@
 						}
 						if($(this)[0].innerText=="Color")
 						{
-							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div id="labelDiv"><label>R</label> <input type="text" id="rVal"/></div><div class="""slidecontainer"><input type="range" min="1" max="100" value="50" class="slider" id="myRange"><p>Value: <span id="demo"></span></p></div><div id="labelDiv"><label>G</label> <input type="text" id="gVal" /></div><div id="labelDiv"><label>B</label> <input type="text" id="bVal" /></div><div><label>HEX</label> <input type="text" id="hexVal" /></div><button type="button">Ok</button></div></div>');
+							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div id="labelDiv"><label>R</label> <input type="text" id="rVal"/></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="rSlider"></div><div id="labelDiv"><label>G</label> <input type="text" id="gVal" /></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="gSlider"></div><div id="labelDiv"><label>B</label> <input type="text" id="bVal" /></div><div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="bSlider"></div><label>HEX</label> <input type="text" id="hexVal" /></div><button type="button">Ok</button></div></div>');
 							executeColorPicker();
 						}
 					}
@@ -52,31 +52,40 @@
 			        b: parseInt(result[3], 16)
 			    } : null;
 			}
+			function parseRGB()
+			{
+				var red = parseInt($("#rVal").val());
+			    var green = parseInt($("#gVal").val());
+			    var blue = parseInt($("#bVal").val());
+			    $("#hexVal").val(rgbToHex(red,green,blue));
+			    $("#picker").css("background-color","rgb("+red+", "+green+", "+blue+")");
+			}
 			function executeColorPicker(){
-				var slider = document.getElementById("myRange");
-					var output = document.getElementById("demo");
-					output.innerHTML = slider.value;
-
-					slider.oninput = function() {
-					  output.innerHTML = this.value;
-					}
+				$("#rSlider").on('input',function(){
+					$("#rVal").val($("#rSlider").val());
+					parseRGB();
+				});
+				$("#gSlider").on('input',function(){
+					$("#gVal").val($("#gSlider").val());
+					parseRGB();
+				});
+				$("#bSlider").on('input',function(){
+					$("#bVal").val($("#bSlider").val());
+					parseRGB();
+				});
 			    $("#picker").css("background-color",brushColor);
 			    $("#rVal").val(hexToRgb(brushColor).r);
 			    $("#gVal").val(hexToRgb(brushColor).g);
 			    $("#bVal").val(hexToRgb(brushColor).b);
 			    $("#hexVal").val(brushColor);
 			    $("#rVal, #gVal, #bVal").change(function(){
-				    var red = parseInt($("#rVal").val());
-				    var green = parseInt($("#gVal").val());
-				    var blue = parseInt($("#bVal").val());
-				    $("#hexVal").val(rgbToHex(red,green,blue));
-				    $("#picker").css("background-color","rgb("+red+", "+green+", "+blue+")");
+				    parseRGB();
 				});
 				$("#hexVal").change(function(){
 					brushColor = $("#hexVal").val();
 					$("#picker").css("background-color",brushColor);
-					$("#rVal").val(hexToRgb(brushColor).r);
-			    	$("#gVal").val(hexToRgb(brushColor).g);
+					
+			    	$("#gVal").val(hexToRgb(brushColor).g);$("#rVal").val(hexToRgb(brushColor).r);
 			    	$("#bVal").val(hexToRgb(brushColor).b);
 				});
 				$("button").click(function(){
@@ -168,7 +177,7 @@
 		    width: 25px;
 		    height: 25px;
 		    border-radius: 50%;
-		    background: #4CAF50;
+		    background: #000000;
 		    cursor: pointer;
 		}
 
@@ -176,7 +185,7 @@
 		    width: 25px;
 		    height: 25px;
 		    border-radius: 50%;
-		    background: #4CAF50;
+		    background: #000000;
 		    cursor: pointer;
 		}
 		#picker {
