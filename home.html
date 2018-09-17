@@ -18,12 +18,22 @@
 						{
 							$("#topHead").append('<div id="fileDiv"></div>');
 						}
-						if($(this)[0].innerText=="Select")
+						if($(this)[0].innerText=="Textbox")
 						{
+							currentState = "textbox";
+							$("#canvas").click(function(e) {
+							    //alert(e.clientX + " " + e.clientY);
+							    var canvas = document.getElementById("canvas");
+								var ctx = canvas.getContext("2d");
+								ctx.font = "30px Arial";
+								ctx.fillStyle=brushColor;
+								ctx.fillText("Lurk",e.clientX-460,e.clientY-200);
+							});
 							console.log('yay');
 						}
 						if($(this)[0].innerText=="Color")
 						{
+							currentState = "drawing";
 							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div id="labelDiv"><label>R</label> <input type="text" id="rVal"/></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="rSlider"></div><div id="labelDiv"><label>G</label> <input type="text" id="gVal" /></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="gSlider"></div><div id="labelDiv"><label>B</label> <input type="text" id="bVal" /></div><div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="bSlider"></div><label>HEX</label> <input type="text" id="hexVal" /></div><button type="button">Ok</button></div></div>');
 							executeColorPicker();
 						}
@@ -98,6 +108,7 @@
 			};
 		</script>
 		<script>
+			var currentState = "drawing";
 			$(document).ready(function(){
 				//Canvas
 				var canvas = document.getElementById('canvas');
@@ -128,7 +139,7 @@
 				$(canvas).on('mousemove', function(e) {
 				    mousex = parseInt(e.clientX-canvasx);
 				    mousey = parseInt(e.clientY-canvasy);
-				    if(mousedown) {
+				    if(mousedown&&currentState=="drawing") {
 				        ctx.beginPath();
 				        if(tooltype=='draw') {
 				            ctx.globalCompositeOperation = 'source-over';
@@ -345,6 +356,9 @@
 					</tr>
 					<tr>
 						<td class="button">Select</td>
+					</tr>
+					<tr>
+						<td class="button">Textbox</td>
 					</tr>
 				</table>
 		</div>
