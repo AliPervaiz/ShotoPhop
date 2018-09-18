@@ -14,6 +14,10 @@
 					if(clicked!=$(this)[0].innerText)
 					{
 						clicked=$(this)[0].innerText;
+						if($(this)[0].innerText=="Brush")
+						{
+							currentState = "brush";
+						}
 						if($(this)[0].innerText=="File")
 						{
 							$("#topHead").append('<div id="fileDiv"></div>');
@@ -21,19 +25,33 @@
 						if($(this)[0].innerText=="Textbox")
 						{
 							currentState = "textbox";
+							var typingx = -1;
+							var typingy = -1;
+							var canvas = document.getElementById("canvas");
+							var ctx = canvas.getContext("2d");
+							ctx.font = "30px Arial";
+							ctx.fillStyle=brushColor;
+							var sentence = "";
 							$("#canvas").click(function(e) {
-							    //alert(e.clientX + " " + e.clientY);
-							    var canvas = document.getElementById("canvas");
-								var ctx = canvas.getContext("2d");
-								ctx.font = "30px Arial";
-								ctx.fillStyle=brushColor;
-								ctx.fillText("Lurk",e.clientX-460,e.clientY-200);
+								typingx = e.clientX;
+								typingy = e.clientY;
+								sentence = "";	
 							});
-							console.log('yay');
+							$(document).keyup(function(event) {
+								ctx.fillStyle="#ffffff";
+								ctx.fillText(sentence,typingx-460,typingy-200);
+								ctx.fillStyle=brushColor;
+								//alert(event.key);
+								if(event.key=="Backspace")
+									sentence = sentence.substring(0,sentence.length-1);
+								else
+									sentence += event.key;
+								ctx.fillText(sentence,typingx-460,typingy-200);
+							});
 						}
 						if($(this)[0].innerText=="Color")
 						{
-							currentState = "drawing";
+							currentState = "color";
 							$("body").append('<div id="colorPicker"><div id="colorPickerHeader"></div><div id="picker" var="1" width="300" height="300"></div><div class="controls"><div id="labelDiv"><label>R</label> <input type="text" id="rVal"/></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="rSlider"></div><div id="labelDiv"><label>G</label> <input type="text" id="gVal" /></div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="gSlider"></div><div id="labelDiv"><label>B</label> <input type="text" id="bVal" /></div><div><div class="""slidecontainer"><input type="range" min="0" max="255" value="0" class="slider" id="bSlider"></div><label>HEX</label> <input type="text" id="hexVal" /></div><button type="button">Ok</button></div></div>');
 							executeColorPicker();
 						}
@@ -108,7 +126,7 @@
 			};
 		</script>
 		<script>
-			var currentState = "drawing";
+			var currentState = "brush";
 			$(document).ready(function(){
 				//Canvas
 				var canvas = document.getElementById('canvas');
@@ -139,7 +157,7 @@
 				$(canvas).on('mousemove', function(e) {
 				    mousex = parseInt(e.clientX-canvasx);
 				    mousey = parseInt(e.clientY-canvasy);
-				    if(mousedown&&currentState=="drawing") {
+				    if(mousedown&&currentState=="brush") {
 				        ctx.beginPath();
 				        if(tooltype=='draw') {
 				            ctx.globalCompositeOperation = 'source-over';
@@ -351,6 +369,9 @@
 		</div>
 		<div id="sideBar">
 			<table style="top: 3px;" width="500px">
+					<tr>
+						<td class="button">Brush</td>
+					</tr>
 					<tr>
 						<td class="button">Color</td>
 					</tr>
