@@ -7,6 +7,21 @@
 				$("#topHead div").remove();
 				$("#colorPicker").remove();
 			}
+			function downloadCanvas(link, canvasId, filename) {
+				console.log("hi");
+			    link.href = document.getElementById(canvasId).toDataURL();
+			    link.download = filename;
+			    var element = document.createElement('a');
+				  element.setAttribute('href', link.href);
+				  element.setAttribute('download', filename);
+
+				  element.style.display = 'none';
+				  document.body.appendChild(element);
+
+				  element.click();
+
+				  document.body.removeChild(element);
+			}
 			var clicked = "";
 			$(document).ready(function(){
 				$(".button").click(function(){
@@ -14,6 +29,11 @@
 					if(clicked!=$(this)[0].innerText)
 					{
 						clicked=$(this)[0].innerText;
+						if($(this)[0].innerText=="Download")
+						{
+							console.log("?");
+							downloadCanvas(this, 'canvas', 'test.png');
+						}
 						if($(this)[0].innerText=="Brush")
 						{
 							currentState = "brush";
@@ -380,6 +400,9 @@
 					</tr>
 					<tr>
 						<td class="button">Textbox</td>
+					</tr>
+					<tr>
+						<td class="button">Download</td>
 					</tr>
 				</table>
 		</div>
