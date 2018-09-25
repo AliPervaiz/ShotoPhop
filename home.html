@@ -22,17 +22,60 @@
 
 				  document.body.removeChild(element);
 			}
+			/*function uploadImage(event) {
+				$("body").append("<input type='file' accept='image/*' onchange='openFile(event)'><br><img id='output'>");
+				var input = event.target;
+			    var reader = new FileReader();
+		        reader.onload = function(){
+			        var dataURL = reader.result;
+			        var output = $("#output");
+			        output.src = dataURL;
+			        console.log(dataURL);
+		        };
+		        reader.readAsDataURL(input.files[0]);
+			}*/
+			
 			var clicked = "";
 			$(document).ready(function(){
+				$('#file-input').change(function(e) {
+			        var file = e.target.files[0],
+			            imageType = /image.*/;
+
+			        if (!file.type.match(imageType))
+			            return;
+
+			        var reader = new FileReader();
+			        reader.onload = fileOnload;
+			        reader.readAsDataURL(file);
+			        console.log(file);
+			    });
+
+			    function fileOnload(e) {
+			    	console.log(e.target.result);
+			        var $img = $('<img>', { src: e.target.result });
+			        $img.on('load',function() {
+			            var canvas = $('#canvas')[0];
+			            var context = canvas.getContext('2d');
+			            console.log(this);
+			            canvas.width = this.naturalWidth;
+			            canvas.height = this.naturalHeight;
+			            context.drawImage(this, 0, 0);
+			        });
+			    }
 				$(".button").click(function(){
 					clear();
+					console.log("!");
 					if(clicked!=$(this)[0].innerText)
 					{
 						clicked=$(this)[0].innerText;
 						if($(this)[0].innerText=="Download")
 						{
-							console.log("?");
 							downloadCanvas(this, 'canvas', 'test.png');
+						}
+						if($(this)[0].innerText=="Open...")
+						{
+							console.log("!");
+							uploadImage();
 						}
 						if($(this)[0].innerText=="Brush")
 						{
@@ -40,7 +83,10 @@
 						}
 						if($(this)[0].innerText=="File")
 						{
-							$("#topHead").append('<div id="fileDiv"></div>');
+							$("#topHead").append('<div id="fileDiv"><div id="openButton">Open...</div></div>');
+							$("#openButton").click(function(){
+								uploadImage();
+							});
 						}
 						if($(this)[0].innerText=="Textbox")
 						{
@@ -408,6 +454,7 @@
 		</div>
 		<div id="Content">
 			<canvas id="canvas" width="504" height="360"></canvas>
+			<input type="file" id="file-input"></input>
 		</div>
 	</body>
 </html>
